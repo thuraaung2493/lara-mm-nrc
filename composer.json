@@ -1,6 +1,6 @@
 {
-  "name": "thuraaung2493/package-name",
-  "description": "Package description.",
+  "name": "thuraaung2493/lara-mm-nrc",
+  "description": "Laravel Myanmar NRC Tool.",
   "type": "library",
   "license": "MIT",
   "authors": [
@@ -13,23 +13,31 @@
   ],
   "autoload": {
     "psr-4": {
-      "Thuraaung\\Namespace\\": "src/"
+      "Thuraaung\\LaraMmNrc\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Thuraaung\\Namespace\\Tests\\": "tests/"
+      "Thuraaung\\LaraMmNrc\\Tests\\": "tests/"
     }
   },
   "require": {
     "php": "^8.2",
-    "nunomaduro/mock-final-classes": "^1.2"
+    "nunomaduro/mock-final-classes": "^1.2",
+    "thuraaung2493/laravel-config-types": "^0.1.0"
   },
   "require-dev": {
     "laravel/pint": "^1.10",
     "nunomaduro/larastan": "^2.0",
     "orchestra/testbench": "^8.5",
     "pestphp/pest": "^2.6"
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Thuraaung\\LaraMmNrc\\LaraMmNrcServiceProvider"
+      ]
+    }
   },
   "config": {
     "sort-packages": true,
@@ -46,19 +54,18 @@
     "post-autoload-dump": [
       "@php vendor/bin/testbench package:discover --ansi"
     ],
-    "pint": [
-      "./vendor/bin/pint"
-    ],
-    "analyse": [
-      "./vendor/bin/phpstan analyse --memory-limit=2G"
-    ],
-    "test": [
-      "./vendor/bin/pest --parallel"
-    ],
+    "lint": "pint",
+    "type-check": "phpstan analyse --ansi --memory-limit=-1 --debug",
+    "test": "pest --colors=always --compact",
+    "test:unit": "pest --colors=always --filter 'Unit'",
+    "test:parallel": "pest --colors=always --parallel --processes=3",
+    "test:coverage": "XDEBUG_MODE=coverag pest --coverage --min=90",
+    "test:lint": "pint --test",
     "prepare": [
-      "@pint",
-      "@analyse",
-      "@test"
+      "@lint",
+      "@type-check",
+      "@test:parallel",
+      "@test:coverage"
     ]
   },
   "minimum-stability": "dev",
